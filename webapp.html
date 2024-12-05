@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aidan's Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            background-color: lightblue;
+            position: relative;
+            font-family: Arial, sans-serif;
+        }
+        .cursor-trail {
+            position: absolute;
+            width: 10px; /* Circle width */
+            height: 10px; /* Circle height */
+            border-radius: 50%;
+            background-color: red;
+            opacity: 0.7;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            animation: fadeOut 4s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .description {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <a href="scratchpage.html" class="back-button">Back to Scratch Page</a>
+    <div class="description">Drag to write/draw and click to lift pencil. Press spacebar to change trail color.</div>
+    <script>
+        let isMouseDown = false;
+        let trailColor = 'red';
+        let isRandomColor = false;
+
+        // Generate a random color
+        function getRandomColor() {
+            return `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+        }
+
+        // Track mouse movements
+        document.addEventListener('mousemove', (event) => {
+            if (isMouseDown) return; // Don't create trails while clicking
+
+            const { clientX, clientY } = event;
+
+            // Create a new trail element
+            const trail = document.createElement('div');
+            trail.classList.add('cursor-trail');
+            trail.style.left = `${clientX}px`;
+            trail.style.top = `${clientY}px`;
+            trail.style.backgroundColor = trailColor;
+
+            // Append the trail to the body
+            document.body.appendChild(trail);
+
+            // Remove the trail after the fade-out animation
+            setTimeout(() => {
+                trail.remove();
+            }, 4000); // Match animation duration
+        });
+
+        // Detect when the mouse is pressed
+        document.addEventListener('mousedown', () => {
+            isMouseDown = true;
+        });
+
+        // Detect when the mouse is released
+        document.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
+
+        // Change color on spacebar press
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                isRandomColor = !isRandomColor;
+                trailColor = isRandomColor ? getRandomColor() : 'red';
+            }
+        });
+    </script>
+</body>
+</html>
